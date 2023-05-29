@@ -6,8 +6,11 @@ namespace HW2
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(Task4.GetRandomString(1,"qwertyuiop"));
-
+            string str = "Hello, my name is Vlad";
+            string encoded = Task8.StreamClipher.Encrypt(str, out string key);
+            Console.WriteLine(encoded);
+            Console.WriteLine(key);
+            Console.WriteLine(Task8.StreamClipher.Decrypt(encoded, key));
         }
     }
 
@@ -96,7 +99,7 @@ namespace HW2
 
     public static class Task4
     {
-        public static string GetRandomString(int count, string? spectr = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=+_?><\|/")
+        public static string GetRandomString(int count, string spectr = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=+_?><\|/")
         {
             if (count < 1) throw new InvalidOperationException();
 
@@ -107,8 +110,96 @@ namespace HW2
                 sb.Append(spectr[rand.Next(spectr.Length)]);
             }
 
-            //return sb.ToString();
-            return new string(Enumerable.Repeat(spectr, count).Select(spec => spec[new Random().Next(spec.Length)]).ToArray());
+            return sb.ToString();
+        }
+    }
+
+    public class Task8
+    {
+        public static class Caesar
+        {
+            public static string Encrypt(string input, out int key)
+            {
+                var locKey = key = new Random().Next(26);
+                return new string(input
+                    .ToLower()
+                    .Select(ch =>
+                    {
+                        ch = (char)(ch + locKey);
+                        if (ch > 122) ch = (char)(ch - 26);
+                        return ch;
+                    })
+                    .ToArray());
+            }
+
+            public static string Decrypt(string input, int key)
+            {
+                return new string(input
+                    .ToLower()
+                    .Select(ch =>
+                    {
+                        ch = (char)(ch - key);
+                        if (ch < 97) ch = (char)(ch + 26);
+                        return ch;
+                    })
+                    .ToArray());
+            }
+        }
+
+        public static class StreamClipher
+        {
+            public static string Encrypt(string input, out string key)
+            {
+                StringBuilder res = new StringBuilder();
+                var rand = new Random();
+
+                int keyLength = rand.Next(input.Length / 2, input.Length + 1);
+                var spectr = @"abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-=+_?><\|/";
+                key = StringToBinary(new string(Enumerable.Repeat(spectr, keyLength).Select(spec => spec[new Random().Next(spec.Length)]).ToArray()));
+
+                string binInp = StringToBinary(input);
+
+                for (int i = 0; i < binInp.Length; i++)
+                {
+                    var locKey = i < key.Length ? key[i] : key[i - key.Length];
+                    res.Append(binInp[i] ^ locKey);
+                }
+                return res.ToString();
+            }
+
+            public static string Decrypt(string input, string key)
+            {
+                StringBuilder res = new StringBuilder();
+
+                for (int i = 0; i < input.Length; i++)
+                {
+                    var locKey = i < key.Length ? key[i] : key[i - key.Length];
+                    res.Append(input[i] ^ locKey);
+                }
+                return BinaryToString(res.ToString());
+            }
+
+            static string StringToBinary(string data)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (char c in data)
+                {
+                    sb.Append(Convert.ToString(c, 2).PadLeft(8, '0'));
+                }
+                return sb.ToString();
+            }
+
+            static string BinaryToString(string data)
+            {
+                List<Byte> byteList = new List<Byte>();
+
+                for (int i = 0; i < data.Length; i += 8)
+                {
+                    byteList.Add(Convert.ToByte(data.Substring(i, 8), 2));
+                }
+                return Encoding.ASCII.GetString(byteList.ToArray());
+            }
         }
     }
 }
