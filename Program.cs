@@ -6,11 +6,7 @@ namespace HW2
     {
         public static void Main(string[] args)
         {
-            string str = "Hello, my name is Vlad";
-            string encoded = Task8.StreamClipher.Encrypt(str, out string key);
-            Console.WriteLine(encoded);
-            Console.WriteLine(key);
-            Console.WriteLine(Task8.StreamClipher.Decrypt(encoded, key));
+
         }
     }
 
@@ -37,7 +33,7 @@ namespace HW2
             if (num % 2 == 0)
                 num /= 2;
             else
-                num = (num * 3 + 1) / 2;
+                num = ((num * 3) + 1) / 2;
 
             Console.WriteLine(num);
             if (num == 1)
@@ -114,7 +110,7 @@ namespace HW2
         }
     }
 
-    public class Task8
+    public static class Task8
     {
         public static class Caesar
         {
@@ -200,6 +196,45 @@ namespace HW2
                 }
                 return Encoding.ASCII.GetString(byteList.ToArray());
             }
+        }
+    }
+
+    public static class Task7
+    {
+        public static string Compress(string inpDnk)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < inpDnk.Length;)
+            {
+                char curNuc = inpDnk[i];
+                int solidLength = 1;
+                while (i + solidLength < inpDnk.Length && inpDnk[i + solidLength] == curNuc) solidLength++;
+                sb.Append(solidLength == 1 ? curNuc : $"{solidLength}{curNuc}");
+                i += solidLength;
+            }
+
+            return sb.ToString();
+        }
+
+        public static string Decompress(string inpDnk)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < inpDnk.Length;)
+            {
+                if (char.IsNumber(inpDnk[i]))
+                {
+                    for (int j = 0; j < Convert.ToInt32(inpDnk[i].ToString()); j++)
+                    {
+                        sb.Append(inpDnk[i + 1]);
+                    }
+                    i += 2;
+                    continue;
+                }
+                sb.Append(inpDnk[i]);
+                i++;
+            }
+            return sb.ToString();
         }
     }
 }
