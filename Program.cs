@@ -6,7 +6,7 @@ namespace HW2
     {
         public static void Main(string[] args)
         {
-            new Task6.GameController().StartGame();
+
         }
     }
 
@@ -116,14 +116,14 @@ namespace HW2
         {
             public static string Encrypt(string input, out int key)
             {
-                var locKey = key = new Random().Next(1,26);
+                var locKey = key = new Random().Next(26);
                 return new string(input
+                    .ToLower()
                     .Select(ch =>
                     {
-                        if (!char.IsLetter(ch)) return ch;
-                        char res = (char)(ch + locKey);
-                        if ((char.IsUpper(ch) && res > 90) || (char.IsLower(ch) && res > 122)) res = (char)(res - 26);
-                        return res;
+                        ch = (char)(ch + locKey);
+                        if (ch > 122) ch = (char)(ch - 26);
+                        return ch;
                     })
                     .ToArray());
             }
@@ -131,12 +131,12 @@ namespace HW2
             public static string Decrypt(string input, int key)
             {
                 return new string(input
+                    .ToLower()
                     .Select(ch =>
                     {
-                        if (!char.IsLetter(ch)) return ch;
-                        char res = (char)(ch - key);
-                        if ((char.IsUpper(ch) && res < 65) || (char.IsLower(ch) && res < 97)) res = (char)(res + 26);
-                        return res;
+                        ch = (char)(ch - key);
+                        if (ch < 97) ch = (char)(ch + 26);
+                        return ch;
                     })
                     .ToArray());
             }
@@ -235,135 +235,6 @@ namespace HW2
                 i++;
             }
             return sb.ToString();
-        }
-    }
-
-    public class Task6
-    {
-        public class GameController
-        {
-            private Board? _gameBoard;
-            public void StartGame()
-            {
-                Console.OutputEncoding = Encoding.UTF8;
-                ConsoleController.ShowMessage("Початок гри");
-                CreateBoard();
-
-            }
-
-            private Board CreateBoard()
-            {
-                ConsoleController.ShowMessage("Для початку гри заповніть перший рядок клітин виставляючи \"L\" для живих клітин та \"D\" для мертвих\n" +
-                    "Довжина першого рядка визначить ширину поля");
-                BoardBuilder bb = new BoardBuilder();
-                while (true)
-                {
-                    var inp = ConsoleController.AskQuestion(bb.PreHeight < 2 
-                        ? $"{bb.ToString()}\nВведіть рядок ігрового поля" 
-                        : $"{bb.ToString()}\nВведіть рядок ігрового поля або \"end\" для переходу на фазу гри");
-                    if (inp == "end")
-                    {
-                        if (bb.PreHeight < 2)
-                        {
-                            ConsoleController.ShowMessage($"Мінімальна висота поля повинна бути 2 або більше\nПоточна висота {bb.PreHeight}");
-                            continue;
-                        }
-                        break;
-                    }
-                    try
-                    {
-                        bb.AddLine(inp);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        ConsoleController.ShowMessage(ex.Message);
-                    }
-                }
-                return bb.GetBoard();
-            }
-
-
-        }
-
-        public class BoardBuilder
-        {
-            private List<bool[]> _preBoard = new List<bool[]>();
-
-            public int PreWidth { get; private set; }
-            public int PreHeight => _preBoard.Count();
-
-            public void AddLine(string line)
-            {
-                if (!line.All(ch => ch == 'L' || ch == 'D'))
-                    throw new ArgumentException("В строці знайдено символи окрім \"L\" та \"D\"");
-                if (PreWidth == 0)
-                {
-                    if (line.Length < 2) throw new ArgumentException("Ширина поля менше 2 клітин неможлива");
-                    PreWidth = line.Length;
-                }
-                if (PreWidth != line.Length)
-                    throw new ArgumentException($"Введений рядок не відповідає раніше заданій ширині поля.\nШирина поля {PreWidth}");
-                _preBoard.Add(ToBoolArr(line));
-            }
-
-            public Board GetBoard()
-            {
-                Board res = new Board(PreWidth, PreHeight);
-                res.SetValues(_preBoard);
-                return res;
-            }
-
-            private bool[] ToBoolArr(string inp) => inp.ToUpper().Select(ch => ch == 'L').ToArray();
-
-            public override string ToString()
-            {
-                return string.Join("\n", string.Join(" ", _preBoard.Select(line=>line.Select(val=>val?"L":"D"))));///TODO
-            }
-        }
-
-        public class Board
-        {
-            private bool[,] _board;
-            public int Width { get; private set; }
-            public int Height { get; private set; }
-
-            public Board(int width, int height)
-            {
-                _board = new bool[width, height];
-            }
-
-            public void SetValues(List<bool[]> vals)
-            {
-                if (vals.Count != Height || vals.Any(val => val.Length != Width))
-                    throw new ArgumentException($"Недопустиме заповнення дошки значеннями");
-                for (int i = 0; i < Height; i++)
-                {
-                    for (int j = 0; j < Width; j++)
-                    {
-                        _board[i, j] = vals[i][j];
-                    }
-                }
-            }
-        }
-
-        public static class ConsoleController
-        {
-            public static void ShowMessage(string msg)
-            {
-                Console.Clear();
-                Console.WriteLine(msg);
-                Console.WriteLine("\nНатисніть будь-яку клавішу для продовження");
-                Console.ReadKey();
-            }
-
-            public static string AskQuestion(string question)
-            {
-                Console.Clear();
-                Console.WriteLine(question);
-                var ans = Console.ReadLine();
-                while (string.IsNullOrEmpty(ans)) ans = Console.ReadLine();
-                return ans;
-            }
         }
     }
 }
