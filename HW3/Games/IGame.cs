@@ -4,11 +4,11 @@ namespace HW3.Games
 {
     internal interface IGame
     {
-        public string Name { get; }
+        string Name { get; }
 
-        public GameResult PlayGame(params Player[] players);
+        GameResult PlayGame(params Player[] players);
 
-        public SelectorResult? WinnerSelector(IEnumerable<PlayerResult> playersReults);
+        SelectorResult? WinnerSelector(IEnumerable<PlayerResult> playersReults);
     }
 
     internal class SelectorResult

@@ -3,7 +3,7 @@ using HW3.Models;
 
 namespace HW3
 {
-    internal class ComputerFactory
+    internal static class ComputerFactory
     {
         public static Computer GetIIForGame(Type gameType)
         {

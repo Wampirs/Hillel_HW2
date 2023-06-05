@@ -2,7 +2,7 @@
 {
     internal abstract class Computer : Player
     {
-        public Computer() : base("Computer")
+        public Computer() : base("_computer")
         {
         }
     }

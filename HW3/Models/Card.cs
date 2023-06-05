@@ -2,8 +2,8 @@
 {
     internal class Card
     {
-        public Suit Suit { get; set; }
-        public CardValue Value { get; set; }
+        public Suit Suit { get;}
+        public CardValue Value { get;}
 
         public Card(Suit suit, CardValue value)
         {

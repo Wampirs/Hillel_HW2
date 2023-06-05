@@ -5,20 +5,18 @@ namespace HW3.Models
 {
     internal class GameResult
     {
+        public string GameName { get;}
 
+        public bool IsDraw { get;}
 
-        public string GameName { get; private set; }
+        public string WinnerName { get;}
 
-        public bool IsDraw { get; private set; }
+        public List<PlayerResult> PlayersResults { get;}
 
-        public string WinnerName { get; private set; }
-
-        public List<PlayerResult> PlayersResults { get; private set; }
-
-        public GameResult(Type game, IEnumerable<PlayerResult> playersResults, Func<IEnumerable<PlayerResult>, SelectorResult> selector)
+        public GameResult(IGame game, IEnumerable<PlayerResult> playersResults)
         {
             GameName = game.Name;
-            var res = selector(playersResults);
+            var res = game.WinnerSelector(playersResults);
             IsDraw = res.IsDraw;
             if (res.IsDraw) WinnerName = "Нічия";
             else WinnerName = res.Winner;

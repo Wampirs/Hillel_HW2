@@ -5,16 +5,16 @@ namespace HW3.Services
 {
     internal class GameService
     {
-        private Player Player { get; set; }
-        private Player Computer { get; set; }
+        private Player? _player { get; set; }
+        private Player? _computer { get; set; }
         private IGame? Game { get; set; }
-        private Score Score { get; set; } = new Score();
+        private readonly Score _score = new Score();
 
 
         public void Start()
         {
-            Player = SetPlayer();
-            while (ConsoleService.AskWithVariants(Score.Results.Count == 0 ? "Зіграємо?" : "Зіграємо ще?"
+            _player = SetPlayer();
+            while (ConsoleService.AskWithVariants(_score.Results.Count == 0 ? "Зіграємо?" : "Зіграємо ще?"
                 , new ConsoleService.Answer("Так", "1", "Т", "Так")
                 , new ConsoleService.Answer("Ні", "2", "Н", "Ні")).Label == "Так")
             {
@@ -22,10 +22,10 @@ namespace HW3.Services
 
                 Game = Activator.CreateInstance(gameType) as IGame;
 
-                Computer = ComputerFactory.GetIIForGame(gameType);
-                var gameresult = Game?.PlayGame(Player, Computer);
+                _computer = ComputerFactory.GetIIForGame(gameType);
+                var gameresult = Game?.PlayGame(_player, _computer);
 
-                Score.AddGameResult(gameresult);
+                _score.AddGameResult(gameresult);
                 ConsoleService.ShowMessage("Результати гри\n" +
                     gameresult.ToString());
             }
@@ -33,7 +33,7 @@ namespace HW3.Services
                 , new ConsoleService.Answer("Так", "1", "Т", "Так")
                 , new ConsoleService.Answer("Ні", "2", "Н", "Ні")).Label == "Так")
             {
-                ConsoleService.ShowMessage("Результати ігрової сесії\n" + Score.ToString());
+                ConsoleService.ShowMessage("Результати ігрової сесії\n" + _score.ToString());
             }
         }
 
@@ -48,13 +48,14 @@ namespace HW3.Services
             var games = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .SelectMany(ass => ass.GetTypes())
-                .Where(type => typeof(IGame).IsAssignableFrom(type)).ToList();
+                .Where(type => typeof(IGame).IsAssignableFrom(type)&&type.IsClass&&!type.IsAbstract).ToList();
 
             ConsoleService.Answer? ans = null;
 
             while (ans is null)
             {
-                ans = ConsoleService.AskWithVariants("Обери гру", new ConsoleService.Answer("BlackJack", "1", "Очко", "БлекДжек", "БЖ"));
+                int counter = 0;
+                ans = ConsoleService.AskWithVariants("Обери гру", games.Select(g=> new ConsoleService.Answer(g.Name, (++counter).ToString())).ToArray());
             }
 
             return games.First(game => game.Name == ans.Label);

@@ -5,20 +5,18 @@ namespace HW3.Games.BlackJack
 {
     internal class BlackJack : IGame
     {
-        public string Name => this.GetType().Name;
+        public string Name => nameof(BlackJack);
 
         private Deck _deck = new Deck(DeckType.x36);
-
-        private bool _manTurnFirst;
 
         public GameResult PlayGame(params Player[] players)
         {
             if (players.Length != 2) throw new InvalidOperationException("This game can play only 2 players");
             Player man = players.First(pl => pl is not Computer);
-            BlackJackComputer computer = (BlackJackComputer)players.First(pl => pl is Computer);
+            BlackJackComputer computer = (BlackJackComputer)players.First(pl => pl is BlackJackComputer);
 
 
-            _manTurnFirst = ConsoleService.AskWithVariants("Бажаєш ходити першим"
+            bool _manTurnFirst = ConsoleService.AskWithVariants("Бажаєш ходити першим"
                 , new ConsoleService.Answer("Так", "1", "Т", "Так")
                 , new ConsoleService.Answer("Ні", "2", "Н", "Ні")).Label == "Так";
 
@@ -44,7 +42,7 @@ namespace HW3.Games.BlackJack
 
             var playerResults = players.Select(pl => new PlayerResult(pl));
 
-            return new GameResult(this.GetType(), playerResults, WinnerSelector);
+            return new GameResult(this, playerResults);
         }
 
         private void PlayMan(Player man)
