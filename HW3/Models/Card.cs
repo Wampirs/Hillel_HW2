@@ -1,9 +1,9 @@
 ﻿namespace HW3.Models
 {
-    internal class Card
+    internal readonly struct Card
     {
-        public Suit Suit { get;}
-        public CardValue Value { get;}
+        public readonly Suit Suit { get;}
+        public readonly CardValue Value { get;}
 
         public Card(Suit suit, CardValue value)
         {
@@ -36,30 +36,5 @@
         {
             return $"{Value} of {Suit}";
         }
-    }
-
-    internal enum Suit
-    {
-        Club,
-        Diamond,
-        Heart,
-        Spades
-    }
-
-    internal enum CardValue
-    {
-        Two = -3,
-        Three = -2,
-        Four = -1,
-        Five,
-        Six = 1,
-        Seven = 2,
-        Eight = 3,
-        Nine = 4,
-        Ten = 5,
-        Jack = 6,
-        Queen = 7,
-        King = 8,
-        Ace = 9
     }
 }

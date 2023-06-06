@@ -7,7 +7,7 @@ namespace HW3.Games.BlackJack
     {
         public string Name => nameof(BlackJack);
 
-        private Deck _deck = new Deck(DeckType.x36);
+        private readonly Deck _deck = new Deck(DeckType.x36);
 
         public GameResult PlayGame(params Player[] players)
         {
@@ -22,7 +22,7 @@ namespace HW3.Games.BlackJack
 
             foreach (var player in players)
             {
-                player.ClearHand();
+                player.Hand.ClearHand();
                 for (int i = 0; i < 2; i++)
                 {
                     player.Hand.TakeCard(_deck.GetTopCard());
@@ -98,6 +98,20 @@ namespace HW3.Games.BlackJack
 
             //виграє той, хто ближче підійшов до 21
             return new SelectorResult(false, playersReults.MinBy(res => 21 - res.Score).PlayerName);
+        }
+    }
+
+    internal class BlackJackComputer : Computer
+    {
+        public bool WantToTakeCard()
+        {
+            int sum = Hand.Cards.Sum(card => card.GetCost());
+            if (Hand.Cards.All(card => card.Value == CardValue.Ace)
+                || sum >= 21) return false;
+
+            if (sum >= 17) return false;
+            return true;
+
         }
     }
 }

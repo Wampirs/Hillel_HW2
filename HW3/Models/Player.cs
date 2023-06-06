@@ -2,19 +2,14 @@
 {
     internal class Player
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public Hand Hand { get; private set; }
-
-        public void ClearHand()
-        {
-            Hand = new Hand();
-        }
+        public Hand Hand { get;}
 
         public Player(string name)
         {
             Name = name;
-            ClearHand();
+            Hand = new Hand();
         }
     }
 }

@@ -10,17 +10,4 @@ namespace HW3.Games
 
         SelectorResult? WinnerSelector(IEnumerable<PlayerResult> playersReults);
     }
-
-    internal class SelectorResult
-    {
-        public bool IsDraw { get; }
-
-        public string? Winner { get; }
-
-        public SelectorResult(bool isDraw, string? winner = null)
-        {
-            Winner = winner;
-            IsDraw = isDraw;
-        }
-    }
 }

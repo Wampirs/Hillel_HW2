@@ -2,7 +2,7 @@
 {
     internal class Hand
     {
-        private List<Card> _cards = new List<Card>();
+        private readonly List<Card> _cards = new List<Card>();
         public IReadOnlyList<Card> Cards => _cards;
 
         public void TakeCard(Card card)
@@ -12,9 +12,14 @@
 
         public Card? DropCard(Predicate<Card> predicate)
         {
-            Card? card = _cards.Find(predicate);
-            if (card != null) _cards.Remove(card);
+            Card card = _cards.Find(predicate);
+            _cards.Remove(card);
             return card;
+        }
+
+        public void ClearHand()
+        {
+            _cards.Clear();
         }
 
         public override string ToString()
