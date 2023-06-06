@@ -7,6 +7,9 @@ namespace HW3
     {
         static void Main(string[] args)
         {
+            Deck d = new Deck(DeckType.x52);
+            d.SortDeck();
+
             GameService _gs = new GameService();
             _gs.Start();
         }
