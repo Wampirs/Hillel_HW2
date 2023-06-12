@@ -1,4 +1,5 @@
 ﻿using HW4.Task2;
+using HW4.Task1;
 
 namespace HW4
 {
@@ -6,6 +7,9 @@ namespace HW4
     {
         static void Main(string[] args)
         {
+            Scenario.PlayStory();
+            
+            /////////////////////////////
             var bank = new Bank();
 
             var vas = bank.CreateClient("Vasya", "Pupkin");
