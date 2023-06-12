@@ -1,5 +1,4 @@
-﻿using System.Security.Principal;
-
+﻿
 namespace HW4.Task2
 {
     internal partial class Bank
@@ -79,7 +78,7 @@ namespace HW4.Task2
             if (!fromClient.Accounts.Any(acc => acc.Id == fromAccount.Id)) throw new InvalidOperationException($"Клієнту {fromClient.Id} не належить рахунок {fromAccount.Id}");
             if (!toClient.Accounts.Any(acc => acc.Id == toAccount.Id)) throw new InvalidOperationException($"Клієнту {toClient.Id} не належить рахунок {toAccount.Id}");
 
-            Money presum = new Money(grn, kop);
+            Money presum = new Money(grn, kop); 
             Transaction result;
 
             Transaction preTrans = new Transaction(TransactionType.Transfer, presum,

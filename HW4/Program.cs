@@ -16,7 +16,7 @@ namespace HW4
 
             var PAcc = bank.CreateAccount();
             bank.BindAccountToClient(pet, PAcc);
-
+            
             bank.PushMoney(vas, vas.Accounts.First(), 10, 50);
             bank.TransferMoney(vas, vas.Accounts.First(), pet, pet.Accounts.First(), 5,0);
 

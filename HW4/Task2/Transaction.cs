@@ -2,7 +2,7 @@
 
 namespace HW4.Task2
 {
-    internal class Transaction 
+    internal class Transaction
     {
         public DateTime DateTime { get; }
         public bool IsSucces { get; }
