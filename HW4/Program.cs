@@ -1,4 +1,5 @@
 ﻿using HW4.Task2;
+using HW4.Task1;
 
 namespace HW4
 {
