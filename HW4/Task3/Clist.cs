@@ -26,10 +26,12 @@ namespace HW4.Task3
 
         private uint NextCapStep(uint curCap)
         {
+            if (curCap == uint.MaxValue) throw new Exception("Колекція вже досягла максимального розміру");
             if (!IsBitScaleble(curCap))
             {
-
+                return ToBitScaleble(curCap);
             }
+            return ~((~_cap) << 1);
         }
 
         private bool IsBitScaleble(uint num)
@@ -75,7 +77,12 @@ namespace HW4.Task3
         public void Add(object item)
         {
             if (item == null) throw new ArgumentNullException("item");
-            if (Count >= _cap)
+            if (Count >= _cap) ChangeCap(NextCapStep(_cap));
+            while (_arr[Count] != null)
+            {
+                
+            }
+            _arr[Count++] = item;
         }
     }
 }
